@@ -1,0 +1,28 @@
+#include <OneWire.h>
+#include <DallasTemperature.h>
+
+// Definiciones
+#define ONE_WIRE_BUS 2   // Pin donde está conectado el sensor
+
+// Configuración del bus OneWire
+OneWire oneWire(ONE_WIRE_BUS);
+
+// Paso del bus OneWire a la librería DallasTemperature
+DallasTemperature sensors(&oneWire);
+
+void setup() {
+  delay(1000);            // Pequeña espera inicial
+  Serial.begin(9600);     // Inicialización del puerto serial
+  sensors.begin();        // Inicialización del sensor de temperatura
+}
+
+void loop() {
+  sensors.requestTemperatures();              // Se solicita la lectura de temperatura
+  float temperature = sensors.getTempCByIndex(0); // Se obtiene la temperatura en °C del primer sensor
+
+  Serial.print("Temperatura = ");
+  Serial.print(temperature);
+  Serial.println(" °C");
+
+  delay(500); // Pequeña pausa antes de la siguiente lectura
+}
