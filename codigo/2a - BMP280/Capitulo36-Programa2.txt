@@ -1,10 +1,6 @@
 /*
-	Capitulo 36 de Arduino desde cero en Español.
 	Programa que muestra en monitor serie los valores de temperatura, presion
 	atmosferica y altitud relativa del sensor BMP280 conectado mediante bus I2C.
-
-	Autor: bitwiseAr  
-
 */
 
 #include <Wire.h>		// incluye libreria de bus I2C
@@ -45,3 +41,4 @@ void loop() {
 
   delay(5000);					// demora de 5 segundos entre lecturas
 }
+
