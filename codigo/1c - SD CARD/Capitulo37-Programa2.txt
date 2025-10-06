@@ -1,12 +1,8 @@
 /*
-	Capitulo 37 de Arduino desde cero en Español.
 	Mediante un modulo lector de memoria MicroSD conectado mediante interfaz SPI
-        crearemos un archivo de texto con los datos separados por comas (CSV) de los valores
+	crearemos un archivo de texto con los datos separados por comas (CSV) de los valores
 	de temperatura y humedad leidos de un modulo sensor DHT11 (KY-015) a intervalos
 	de 1 segundo. Requiere instalar librerias DHT de Adafruit.
-
-	Autor: bitwiseAr  
-
 */
 
 #include <SPI.h>		// incluye libreria interfaz SPI
@@ -64,3 +60,4 @@ void setup() {
 void loop() {			// funcion loop() obligatoria de declarar pero no utilizada
   // nada por aqui
 }
+
