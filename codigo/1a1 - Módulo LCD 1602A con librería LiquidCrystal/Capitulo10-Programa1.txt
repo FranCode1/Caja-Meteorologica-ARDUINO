@@ -1,10 +1,6 @@
 /*
-	Capitulo 10 de Arduino desde cero en Español
 	Programa que permite mostrar en el modulo LCD el tiempo transcurrido en segundos desde
 	que se inicio el programa.
-
-	Autor: bitwiseAr  
-
 */
 
 #include <LiquidCrystal.h>		// importa libreria
@@ -22,3 +18,4 @@ void loop() {
   lcd.print(millis() / 1000);		// escribe valor en segundos devuelto por funcion millis()
   lcd.print(" seg.");			// imprime a continuacion segundos
 }
+
