@@ -1,12 +1,11 @@
 /*
-	Capitulo 35 de Arduino desde cero en Español.
-	Simple programa que muestra en la pantalla de un modulo LCD 1602A mediante adaptador
+	programa que muestra en la pantalla de un modulo LCD 1602A mediante adaptador
 	LCD I2C el tiempo transcurrido desde la ejecucion del mismo. Adaptador basado en
 	circuito integrado PCF8574 y libreria LiquidCrystal_I2C descargada desde:
 	https://github.com/fmalpartida/New-LiquidCrystal
 	
 	https://www.youtube.com/c/BitwiseAr
-	Autor: bitwiseAr  
+
 
 */
 
@@ -32,3 +31,4 @@ void loop()
     lcd.print(millis() / 1000);		// funcion millis() / 1000 para segundos transcurridos
     lcd.print(" seg.");			// escribe seg.
 }
+
