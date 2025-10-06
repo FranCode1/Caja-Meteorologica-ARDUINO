@@ -1,10 +1,7 @@
 /*
-	Capitulo 37 de Arduino desde cero en Español.
 	Mediante un modulo lector de memoria MicroSD conectado mediante interfaz SPI
-        crearemos un archivo de texto de prueba y grabaremos una linea en el mismo, 
+    crearemos un archivo de texto de prueba y grabaremos una linea en el mismo, 
 	luego haremos la apertura para su lectura y asi verificar el correcto funcionamiemto.
-
-	Autor: bitwiseAr  
 
 */
 
@@ -50,3 +47,4 @@ void setup() {
 void loop() {			// funcion loop() obligatoria de declarar pero no utilizada
   // nada por aqui
 }
+
