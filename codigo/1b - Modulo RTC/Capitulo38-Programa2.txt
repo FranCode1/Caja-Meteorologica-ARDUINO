@@ -1,12 +1,3 @@
-/*
-	Capitulo 38 de Arduino desde cero en Español.
-	Programa que establece una alarma para escribir en monitor serie el texto Alarma
-	exactamente a las 14:30 hs. todos los dias.
-
-	Autor: bitwiseAr  
-
-*/
-
 #include <Wire.h>		// incluye libreria para interfaz I2C
 #include <RTClib.h>		// incluye libreria para el manejo del modulo RTC
 
@@ -49,3 +40,4 @@ void loop () {
   if ( fecha.hour() == 2 && fecha.minute() == 0 ) 	// si hora = 2 y minutos = 0 restablece valor de
     alarma = true;					// variable de control en verdadero	
 }
+
