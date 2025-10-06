@@ -1,15 +1,3 @@
-/*
-	Capitulo 35 de Arduino desde cero en Español.
-	Simple programa que muestra en la pantalla de un modulo LCD 1602A mediante adaptador
-	LCD I2C un texto que parpadea a intervalos de medio segundo. Adaptador basado en
-	circuito integrado PCF8574 y libreria LiquidCrystal_I2C descargada desde:
-	https://github.com/fmalpartida/New-LiquidCrystal
-	
-	https://www.youtube.com/c/BitwiseAr
-	Autor: bitwiseAr  
-
-*/
-
 #include <Wire.h>			// libreria de comunicacion por I2C
 #include <LCD.h>			// libreria para funciones de LCD
 #include <LiquidCrystal_I2C.h>		// libreria para LCD por I2C
@@ -33,3 +21,4 @@ void loop()
     lcd.noDisplay();			// oculta el texto
     delay(500);				// demora de medio segundo
 }
+
