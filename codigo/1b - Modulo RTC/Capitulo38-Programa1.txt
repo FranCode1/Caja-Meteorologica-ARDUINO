@@ -1,12 +1,3 @@
-/*
-	Capitulo 38 de Arduino desde cero en Español.
-	Programa para establecer fecha y horario iniciales para el modulo RTC modelo DS3231 y
-	mostrar dichos datos mediante el monitor serie. Requiere instalar libreria RTClib
-
-	Autor: bitwiseAr  
-
-*/
-
 #include <Wire.h>		// incluye libreria para interfaz I2C
 #include <RTClib.h>		// incluye libreria para el manejo del modulo RTC
 
@@ -40,3 +31,4 @@ void loop () {
  
  delay(1000);					// demora de 1 segundo
 }
+
