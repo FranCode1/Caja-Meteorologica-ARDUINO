@@ -1,5 +1,5 @@
-#ifndef _BME_H
-#define _BME_H
+#ifndef _BME280_H
+#define _BME280_H
 
 #include <Arduino.h>
 #include <Adafruit_Sensor.h>
@@ -50,3 +50,4 @@ void leerBME() {
 }
 
 #endif
+
