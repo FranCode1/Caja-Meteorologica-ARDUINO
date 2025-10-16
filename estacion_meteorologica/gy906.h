@@ -1,37 +1,58 @@
 #ifndef _GY906_H
 #define _GY906_H
 
-#include <Wire.h> //para protocolo i2c
-#include <Adafruit.h>
+#include <Wire.h>
+#include <Adafruit_MLX90614.h>  // Librería correcta para el MLX90614
 
+// ---------------------------------
+// OBJETO DEL SENSOR
+// ---------------------------------
 Adafruit_MLX90614 gy906 = Adafruit_MLX90614();
 
-void setup(){
-    Serial.begin(9600);
+// ---------------------------------
+// VARIABLES DE MEDICIÓN
+// ---------------------------------
+float TEMP_AMBIENTE_GY906 = 0.0;
+float TEMP_OBJETO_GY906 = 0.0;
 
-    Serial.println("Adafruit MLX90614 test");
-
-    gy906.begin(); //inicia el sensor gy906
+// ---------------------------------
+// INICIALIZACIÓN
+// ---------------------------------
+void iniciarGY906() {
+    Wire.begin();
+    if (!gy906.begin()) {
+        Serial.println("Error: no se pudo iniciar el sensor GY-906");
+        while (1);
+    }
+    Serial.println("Sensor GY-906 iniciado correctamente");
 }
 
-void loop(){
-    //mide en Celcius
-    Serial.print("Ambient: ");
-    Serial.print(gy906.readAmbientTestC());
+// ---------------------------------
+// LECTURA PRINCIPAL
+// ---------------------------------
+void leerGY906() {
+    TEMP_AMBIENTE_GY906 = gy906.readAmbientTempC();
+    TEMP_OBJETO_GY906 = gy906.readObjectTempC();
 
-    Serial.print("°C\tObject: ");
-    Serial.print(gy906.readObjectTempC());
-    Serial.println("°C");
-
-    //mide en Farenheit
-    Serial.print("Ambient: ");
-    Serial.print(gy906.readAmbientTempF());
-
-    Serial.print("°F\tObject: ");
-    Serial.print(gy906.readObjectTempF());
-    Serial.println("°F");
-
-    Serial.println();
+    // Serial.print("Temp. Ambiente: ");
+    // Serial.print(TEMP_AMBIENTE);
+    // Serial.print(" °C\tTemp. Objeto: ");
+    // Serial.print(TEMP_OBJETO);
+    // Serial.println(" °C");
 }
+
+// ---------------------------------
+// OPCIONAL: Lectura en Fahrenheit
+// ---------------------------------
+// void leerGY906_F() {
+//     float ambienteF = gy906.readAmbientTempF();
+//     float objetoF = gy906.readObjectTempF();
+
+//     Serial.print("Temp. Ambiente: ");
+//     Serial.print(ambienteF);
+//     Serial.print(" °F\tTemp. Objeto: ");
+//     Serial.print(objetoF);
+//     Serial.println(" °F");
+// }
 
 #endif

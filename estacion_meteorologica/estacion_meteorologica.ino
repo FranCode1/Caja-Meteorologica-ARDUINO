@@ -21,6 +21,10 @@ void setup(){
   iniciarBH1750();
   iniciarML8511();
 
+  iniciarGY906();
+  iniciarRTC();
+  iniciarSD();
+
 
   calibrarMQ135();
 
@@ -45,6 +49,13 @@ void loop(){
   leerBH1750();
   leerML8511();
 
-  delay(1000);
+  leerGY906();
+  leerRTC();
+  
+  // 5️⃣ Crear el texto de registro
+  String registro = tiempo + ", Temp: " + String(temperatura, 1) + "°C, Hum: " + String(humedad, 1) + "%, Luz: " + String(luz) + " lx, Tierra: " + String(tierra) + "%, CO2: " + String(co2) + " ppm";
+  
+  escribir("registro.txt", registro)
 
+  delay(1000);
 }

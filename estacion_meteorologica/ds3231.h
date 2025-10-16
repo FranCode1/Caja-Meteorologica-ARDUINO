@@ -1,50 +1,64 @@
 #ifndef _DS3231_H
 #define _DS3231_H
 
-#include <RTClib.h> //libreria para el reloj(Ds3231)
+#include <Wire.h>
+#include <RTClib.h>  // Librería para el módulo RTC DS3231
 
-RTC_DS3231 rtc; // crea un objeto para el reloj
+// ---------------------------------
+// OBJETO DEL RELOJ
+// ---------------------------------
+RTC_DS3231 rtc;
 
-void setup()
-{
-    Serial.begin(9600);
+// ---------------------------------
+// VARIABLES DE TIEMPO
+// ---------------------------------
+int DIA, MES, ANIO, HORA, MINUTO, SEGUNDO;
 
-    // RELOJ
-    if (!rtc.begin())
-    {
-        Serial.println("Modulo RTC no encontrado!");
-        while (1)
-            ;
+// ---------------------------------
+// INICIALIZACIÓN
+// ---------------------------------
+void iniciarRTC() {
+    Wire.begin();
+
+    if (!rtc.begin()) {
+        Serial.println("❌ Error: módulo RTC no encontrado");
+        while (1);
     }
-    // rtc.adjust(DateTime(2025, 11, 10, 06, 0, 0)); //DateTime(año, dia, mes, hora, minutos, segundos);
-    rtc.adjust(DateTime(__DATE__, __TIME__)); // esta linea solo se tiene que ejecutar una sola vez en el dispositivo
-    // una vez ejecutada no hace falta que se ejecute otra vez porque el horario ya esta ajustado
+
+    // ⚠️ Solo descomentar una vez para ajustar manualmente la hora:
+    // rtc.adjust(DateTime(2025, 11, 10, 6, 0, 0)); // Año, Mes, Día, Hora, Minuto, Segundo
+
+    // ✅ Esta línea sincroniza con la hora de compilación (solo ejecutar una vez)
+    // rtc.adjust(DateTime(__DATE__, __TIME__));
+
+    Serial.println("✅ RTC DS3231 iniciado correctamente");
 }
 
-void loop()
-{
-    // RELOJ
+// ---------------------------------
+// ACTUALIZAR VARIABLES DE TIEMPO
+// ---------------------------------
+void leerRTC() {
     DateTime fecha = rtc.now();
 
-    Serial.print(fecha.day());
-    Serial.print("/");
-    Serial.print(fecha.month());
-    Serial.print("/");
-    Serial.print(fecha.year());
-    Serial.print(" ");
-    Serial.print(fecha.hour());
-    Serial.print(":");
-    Serial.print(fecha.minute());
-    Serial.print(":");
-    Serial.print(fecha.second());
+    DIA = fecha.day();
+    MES = fecha.month();
+    ANIO = fecha.year();
+    HORA = fecha.hour();
+    MINUTO = fecha.minute();
+    SEGUNDO = fecha.second();
+}
 
-    if (fecha.hour() == 22)
-    {
-        // guardar registro de la info en la Micro SD
-    }
+// ---------------------------------
+// MOSTRAR EN SERIAL (DEBUG)
+// ---------------------------------
+void mostrarHoraRTC() {
+    leerRTC();
 
-    // WARNING: creo que no hace falta tanto bardo, osea esto esta en las pantallas
-    //  entonces cuando cargan las pantallas se actualizan los valores por el rtc.now()
+    char buffer[25];
+    sprintf(buffer, "%02d/%02d/%04d %02d:%02d:%02d",
+            DIA, MES, ANIO, HORA, MINUTO, SEGUNDO);
+
+    Serial.println(buffer);
 }
 
 #endif

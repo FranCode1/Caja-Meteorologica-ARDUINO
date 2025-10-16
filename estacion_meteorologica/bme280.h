@@ -34,9 +34,9 @@ void iniciarBME() {
 // Lectura del sensor
 // -------------------------------------------------------------------
 void leerBME() {
-    temp_bme = bme.readTemperature();
-    presion_bme = bme.readPressure() / 100.0F;
-    humedad_bme = bme.readHumidity();
+    temp_bme280 = bme.readTemperature();
+    presion_bme280 = bme.readPressure() / 100.0F;
+    humedad_bme280 = bme.readHumidity();
 
     // Serial.print("Temperatura: ");
     // Serial.print(temp_bme);
@@ -50,4 +50,3 @@ void leerBME() {
 }
 
 #endif
-

@@ -30,9 +30,9 @@ LiquidLine linea4a(4, 3, "Meteorologica!");
 LiquidScreen pantalla0(linea1a, linea2a, linea3a, linea4a);
 
 LiquidLine linea1b(0, 0, "<=====BME280======>");
-LiquidLine linea2b(0, 1, "Temperatura: ", temp_bme, " °C");
-LiquidLine linea3b(0, 2, "Humedad: ", humedad_bme, "%");
-LiquidLine linea4b(0, 3, "Presión Atm: ", presion_bme, " hPa");
+LiquidLine linea2b(0, 1, "Temperatura: ", temp_bme280, " °C");
+LiquidLine linea3b(0, 2, "Humedad: ", humedad_bme280, "%");
+LiquidLine linea4b(0, 3, "Presión Atm: ", presion_bme280, " hPa");
 LiquidScreen pantalla1(linea1b, linea2b, linea3b, linea4b);
 
 LiquidLine linea1c(0, 0, "<======Ds18b20=====>");
@@ -48,9 +48,9 @@ LiquidLine linea4d(0, 3, "Rayos UV", uvIndex, " uv");
 LiquidScreen pantalla3(linea1d, linea2d, linea3d, linea4d);
 
 LiquidLine linea1e(0, 0, "<======MQ-135======>");
-LiquidLine linea2e(0, 1, "Calidad Aire: ", tipo_aire);
+LiquidLine linea2e(0, 1, "Calidad Aire: ", tipo_aire); //chusmear esta y depaso renombrar variables
 LiquidLine linea3e(0, 2, "<======GY-906======>");
-LiquidLine linea4e(0, 3, "Temp. Infrarroja: ", temp_infra, " °C");
+LiquidLine linea4e(0, 3, "Temp. Infrarroja: ", TEMP_OBJETO_GY906, " °C");
 LiquidScreen pantalla4(linea1e, linea2e, linea3e, linea4e);
 
 LiquidLine linea1f(0, 0, "<======AJUSTES=====>");

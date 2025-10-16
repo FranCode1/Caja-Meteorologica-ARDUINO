@@ -1,49 +1,78 @@
 #ifndef _MICROSD_H
 #define _MICROSD_H
 
-#include <SPI.h>
-#include <SD.h>
+#include <SPI.h>  // Protocolo de comunicación para la SD
+#include <SD.h>   // Librería que maneja archivos en la SD
 
-#define SSpin 10
+// Pin Chip Select (SS) del módulo microSD
+#define SD_CS_PIN 10   
 
-File archivo
+File archivo;  // Variable global que representa el archivo que vamos a leer o escribir
 
-void setup(){
+
+// =====================================================
+// FUNCIÓN: Inicializar la microSD
+// =====================================================
+bool iniciarSD() {
     Serial.begin(9600);
-    Serial.println("Inicializando tarjeta ...");
-    if (!SD.begin(SSpin)){
-        Serial.println("Fallo en inicializacion!");
-        return;
+    Serial.println("📀 Inicializando tarjeta microSD...");
+
+    // Inicia la tarjeta microSD usando el pin CS
+    if (!SD.begin(SD_CS_PIN)) {
+        Serial.println("❌ Error: no se pudo inicializar la tarjeta SD");
+        return false;  // Si falla, devolvemos false
     }
 
-    Serial.println("Inicializacion correcta");
-    archivo = SD.open("registro.txt", FILE_WRITE);
+    Serial.println("✅ Tarjeta microSD lista para usar");
+    return true;
+}
 
-    // if(archivo){
-    //     archivo.println("Probando 1, 2, 3");
-    //     Serial.println("Escribiendo  en archivo prueba.txt ...");
-    //     archivo.close();
-    //     Serial.println("escritura correcta");
-    // } else {
-    //     Serial.println("error en apertura de prueba.txt");
-    // }
 
-    // archivo = SD.open("registro.txt");
-    if (archivo){
-        archivo.println("Probando 1, 2, 3"); //escribe en el archivo
-        Serial.println("Contenido de prueba.txt: "); //escribe en la consola
-        while (archivo.available()){
-            Serial.write(archivo.read()); //de un caracter por vez hasta finalizar
-        }
-        archivo.close();
-        Serial.println("escritura correcta");
+// =====================================================
+// FUNCIÓN: Escribir texto en un archivo de la SD
+// =====================================================
+// Recibe el nombre del archivo y el texto a escribir
+bool escribirSD(const char *nombreArchivo, const String &texto) {
+    // Abrimos el archivo en modo escritura (crea el archivo si no existe)
+    archivo = SD.open(nombreArchivo, FILE_WRITE);
+
+    if (archivo) {
+        archivo.println(texto);  // Escribimos el texto en una nueva línea
+        archivo.close();         // Cerramos el archivo (muy importante)
+        Serial.print("📝 Escrito correctamente en ");
+        Serial.println(nombreArchivo);
+        return true;
     } else {
-        Serial.println("error en apertura de registro.txt");
+        Serial.print("❌ Error al abrir ");
+        Serial.println(nombreArchivo);
+        return false;
     }
 }
 
-void loop(){
-    //nada xd
+
+// =====================================================
+// FUNCIÓN: Leer el contenido de un archivo de la SD
+// =====================================================
+void leerSD(const char *nombreArchivo) {
+    archivo = SD.open(nombreArchivo);  // Abrimos el archivo en modo lectura
+
+    if (archivo) {
+        Serial.print("📄 Contenido de ");
+        Serial.println(nombreArchivo);
+        Serial.println("------------------------");
+
+        // Leemos el contenido caracter por caracter
+        while (archivo.available()) {
+            Serial.write(archivo.read());
+        }
+
+        archivo.close();  // Cerramos el archivo
+        Serial.println("\n------------------------");
+        Serial.println("✅ Lectura finalizada");
+    } else {
+        Serial.print("❌ Error al abrir ");
+        Serial.println(nombreArchivo);
+    }
 }
 
 #endif
