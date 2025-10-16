@@ -20,7 +20,7 @@ void setup(){
   iniciarCSMSV2();
   iniciarBH1750();
   iniciarML8511();
-
+  iniciarMQ135();
   iniciarGY906();
   iniciarRTC();
   iniciarSD();
@@ -48,7 +48,7 @@ void loop(){
   leerCSMSV2();
   leerBH1750();
   leerML8511();
-
+  leerMQ135();
   leerGY906();
   leerRTC();
   

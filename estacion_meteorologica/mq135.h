@@ -1,76 +1,92 @@
 #ifndef _MQ135_H
 #define _MQ135_H
 
-// MQ-135
-int VALOR;
+#include <Arduino.h>
 
-const int MQ_PIN = A0;              // pin analogico elegido
-const float RL = 1.0;               // 1k kohm module
-const float CLEAN_AIR_RATIO = 9.80; // Taken from the datasheet graph
+// -----------------------------
+// CONFIGURACIÓN DEL SENSOR
+// -----------------------------
+#define MQ135_PIN A0
+#define LED_ALERTA_GAS 3   // LED indicador de gas
+#define RL 1.0              // Resistencia de carga (kΩ)
+#define CLEAN_AIR_RATIO 9.8 // Relación RS/RO en aire limpio (del datasheet)
 
-float RS;                           // kohm
-float RO;                           // kohm
-int ADC;                            // 0 to 1023
+// -----------------------------
+// VARIABLES GLOBALES
+// -----------------------------
+float RO = 10.0;  // Valor inicial de RO (se calibra una vez)
+float RS = 0.0;   // Resistencia medida
+int VALOR = 0;    // Lectura analógica
 
-ADC = analogRead(MQ_PIN);
-RS = ((float)RL * (1023 - ADC) / ADC); // esto es el divisor de voltaje
+// -----------------------------
+// CALIBRACIÓN DEL SENSOR
+// -----------------------------
+// Se llama solo una vez, en aire limpio, para obtener RO
+void calibrarMQ135() {
+    Serial.println("Calibrando MQ-135... Espera 10 segundos en aire limpio...");
+    float RS_sum = 0.0;
 
-RO = RS / CLEAN_AIR_RATIO; // Do only once while measuring clear air
+    for (int i = 0; i < 100; i++) {
+        int adc = analogRead(MQ135_PIN);
+        float rs = RL * (1023.0 / adc - 1.0);
+        RS_sum += rs;
+        delay(100);
+    }
 
-void setup()
-{
-    Serial.begin(9600);
+    RS = RS_sum / 100.0;
+    RO = RS / CLEAN_AIR_RATIO;
+
+    // Serial.print("Calibración completada. RO = ");
+    // Serial.print(RO);
+    // Serial.println(" kΩ");
 }
 
-void loop(){
-    // MQ-135
-    // no se si tengo que hacer una variable para cada tipo de gas
+// -----------------------------
+// FUNCIÓN: Leer valor actual
+// -----------------------------
+float leerMQ135() {
+    int adc = analogRead(MQ135_PIN);
+    RS = RL * (1023.0 / adc - 1.0);
+    float ratio = RS / RO; // Relación RS/RO
 
-    VALOR = analogRead(A0); // aca iria el pin analogo al que esta conectado
-    Serial.println(VALOR);
-    if (VALOR > 400)
-    {
-        digitalWrite(LED_ALERTA_GAS, HIGH);
-    }
-    else
-    {
-        digitalWrite(LED_ALERTA_GAS, LOW);
-    }
+    // Estimación de calidad del aire (más ratio = aire más limpio)
+    // int calidad;
+    // if (ratio > 3.0)
+    //     calidad = 1; // Muy buena
+    // else if (ratio > 2.0)
+    //     calidad = 2; // Buena
+    // else if (ratio > 1.5)
+    //     calidad = 3; // Regular
+    // else
+    //     calidad = 4; // Mala
 
-    float sensor_volt;
-    float RS_air; // Get the value of RS via in a clear air
-    float R0;     // Get the value of R0 via in H2
-    // float sensorValue;
-    float sensorValue = analogRead(A0); // esta variable esta mas arriba, no se porque la hacer denuevo aca
-    sensor_volt = (float)sensorValue / 1024 * 5.0;
-    RS_gas = (5.0 - sensor_volt) / sensor_volt;
+    // Activar LED si hay contaminación alta
+    // if (calidad >= 4)
+    //     digitalWrite(LED_ALERTA_GAS, HIGH);
+    // else
+    //     digitalWrite(LED_ALERTA_GAS, LOW);
 
-    ration = RS_gas / 0.75;
+    // Mostrar por consola
+    // Serial.print("RS: ");
+    // Serial.print(RS, 2);
+    // Serial.print(" kΩ  |  RO: ");
+    // Serial.print(RO, 2);
+    // Serial.print(" kΩ  |  RS/RO: ");
+    // Serial.print(ratio, 2);
+    // Serial.print("  |  Calidad: ");
+    // Serial.println(calidad);
 
-    Serial.print("sensor_volt = ");
-    Serial.println(sensor_volt);
-    Serial.print("RS_ratio = ");
-    Serial.println(RS_gas);
-    Serial.print("Rs/R0 = ");
-    Serial.println(ratio);
-
-    Serial.print("\n\n");
-
-    // Get a average data by testing 100 times
-    for (int x = 0, x < 100; x++)
-    {
-        sensorValue = sensorValue + analogRead(A0);
-    }
-    sensorValue = sensorValue / 100.0;
-
-    sensor_volt = sensorValue / 1024 * 5.0;
-    RS_air = (5.0 - sensor_volt) / sensor_volt; // omit * RL
-    R0 = RS_air / 9.8;                          // The ratio of RS/R0 is 9.8 in a clear air from Graph (Found using WebPlotDigitizer)
-
-    Serial.print("sensor_volt = ");
-    Serial.print(sensor_volt);
-    Serial.println("V");
+    // Devolver el ratio (útil para guardar en SD)
+    return ratio;
 }
 
+// -----------------------------
+// SETUP DEL SENSOR
+// -----------------------------
+void iniciarMQ135() {
+    pinMode(MQ135_PIN, INPUT);
+    pinMode(LED_ALERTA_GAS, OUTPUT);
+    calibrarMQ135(); // calibrar al inicio (solo una vez idealmente)
+}
 
 #endif

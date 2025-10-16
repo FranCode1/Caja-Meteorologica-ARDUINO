@@ -48,7 +48,7 @@ LiquidLine linea4d(0, 3, "Rayos UV", uvIndex, " uv");
 LiquidScreen pantalla3(linea1d, linea2d, linea3d, linea4d);
 
 LiquidLine linea1e(0, 0, "<======MQ-135======>");
-LiquidLine linea2e(0, 1, "Calidad Aire: ", tipo_aire); //chusmear esta y depaso renombrar variables
+LiquidLine linea2e(0, 1, "Calidad Aire: ", ratio); //chusmear esta y depaso renombrar variables
 LiquidLine linea3e(0, 2, "<======GY-906======>");
 LiquidLine linea4e(0, 3, "Temp. Infrarroja: ", TEMP_OBJETO_GY906, " °C");
 LiquidScreen pantalla4(linea1e, linea2e, linea3e, linea4e);
