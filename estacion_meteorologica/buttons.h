@@ -1,3 +1,6 @@
+#ifndef _BUTTONS_H
+#define _BUTTONS_H
+
 void navegarMenu() {
     if (BTN_DERECHA) {
         menu.next_screen();
@@ -13,3 +16,5 @@ void navegarMenu() {
         fn_atras();
     }
 }
+
+#endif
