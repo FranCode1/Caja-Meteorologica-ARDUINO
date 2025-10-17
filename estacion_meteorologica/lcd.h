@@ -7,7 +7,7 @@
 #include <LiquidMenu.h>         // Permite manejar menús y pantallas múltiples
 
 #include "buttons.h"            // Libreria de los botones
-#include "bme.h"                // Sensor de temperatura, humedad y presion atmosferica
+#include "bme280.h"                // Sensor de temperatura, humedad y presion atmosferica
 #include "ds18b20.h"            // Sensor de temperatura del agua
 #include "csmsv2.h"             // Sensor de temperatura de la tierra
 #include "bh1750.h"             // Sensor de Luz
@@ -48,7 +48,7 @@ LiquidLine linea4d(0, 3, "Rayos UV", uvIndex, " uv");
 LiquidScreen pantalla3(linea1d, linea2d, linea3d, linea4d);
 
 LiquidLine linea1e(0, 0, "<======MQ-135======>");
-LiquidLine linea2e(0, 1, "Calidad Aire: ", ratio); //chusmear esta y depaso renombrar variables
+LiquidLine linea2e(0, 1, "Calidad Aire: ", ratio, "% Co2"); //chusmear esta y depaso renombrar variables
 LiquidLine linea3e(0, 2, "<======GY-906======>");
 LiquidLine linea4e(0, 3, "Temp. Infrarroja: ", TEMP_OBJETO_GY906, " °C");
 LiquidScreen pantalla4(linea1e, linea2e, linea3e, linea4e);
@@ -108,20 +108,17 @@ void iniciarPantalla()
     menu.update();
 }
 
-void mostrarInicio()
-{
-    menu.change_screen(&pantalla0);//pantalla de bienvenida
+// Muestra la pantalla de inicio por 3 segundos
+void mostrarInicio() {
+    menu.change_screen(&pantalla0);
+    menu.update();
+    delay(3000);  // Espera 3 segundos
+    menu.change_screen(&pantalla1);
     menu.update();
 }
 
-// void mostrarBME()
-// {
-//     menu.change_screen(&pantalla1); //pantalla sensor BME280
-//     menu.update();
-// }
-
-void actualizarPantalla()
-{
+// Actualiza el contenido de la pantalla
+void actualizarPantalla() {
     menu.update();
 }
 
@@ -129,183 +126,15 @@ void actualizarPantalla()
 
 
 
+    // menu.switch_focus(false);//abajo
+    // menu.set_focusedLine(0);
+    // linea3_2.attach_function(1, fn_atras);
 
+    // menu.add_screen(pantalla1);
+    // linea4.set_focusPosition(Position::CUSTOM);
+    // pantalla1.set_displayLineCount(4);
+    // pantalla2.set_displayLineCount(4);
+    // lcd.createChar(0, arrow); // crea un caracter personalizado
 
-
-
-
-void setup()
-{
-    Serial.begin(9600);
-
-    // PANTALLA
-    lcd.begin();
-    lcd.init();
-    lcd.backlight();
-    lcd.clear();
-
-    lcd.createChar(0, arrow); // crea un caracter personalizado
-
-    menu.init();
-
-    //aca serian la linea de la f a la i
-    linea1.set_focusPosition(Position::CUSTOM);
-    linea2.set_focusPosition(Position::CUSTOM);
-    linea3.set_focusPosition(Position::CUSTOM);
-    linea4.set_focusPosition(Position::CUSTOM);
-
-    linea1.attach_function(1, fn_led1);
-    linea2.attach_function(1, fn_led2);
-    linea3.attach_function(1, fn_led3);
-    linea4.attach_function(1, fn_todos);
-
-    linea1_2.attach_function(1, fn_on);
-    linea2_2.attach_function(1, fn_off);
-    linea3_2.attach_function(1, fn_atras);
-
-    menu.add_screen(pantalla1);
-
-    pantalla1.set_displayLineCount(4);
-    pantalla2.set_displayLineCount(4);
-
-    menu.set_focusedLine(0);
-
-    menu.update();
-}
-
-void loop()
-{
-    // PANTALLA
-    lcd.display();
-
-    // Funcion para detectar cuando se presiona el boton de OK
-    //selectOption(); // solo sirve con un encoder, no con botones
-
-    //aState = digitalRead(outputA);
-    // if (aState != aLastState)
-    // {
-    //     if (digitalRead(outputB) != aState)
-    //     {
-    //         menu.switch_focus(false);//hace el menu hacia abajo
-    //     }
-    //     else
-    //     {
-    //         menu.switch_focus(true);//hace el menu hacia arriba
-    //     }
-    //     menu.update();
-    //     aLastState = aState;
-    // }
-
-    //codigo de los botones
-    //los derecha y izquierda son para navegar el menu
-    //abajo y arriba se usan en cambio horario y fecha
-    //solo hay arriba y abajo, ok y atras
-
-    if (BTN_DERECHA){
-        menu.switch_focus(true);//arriba
-    } else if (BTN_IZQUIERDA){
-        menu.switch_focus(false);//abajo
-    } else {
-        //boton ok y atras
-        pass;
-    }
-    menu.update();
-}
-
-// Funciones:::::
-// PANTALLA y botonera
-
-void selectOption()
-{
-    if (digitalRead(sw) == LOW)
-    {
-        menu.call_function(1);
-        delay(500);
-    }
-}
-
-// Se puede hacer una funcion que haga lo mismo que estas tres funciones
-//  para evitar repetir el codigo
-// void fn_led1()
-// {
-//     menu.change_screen(2);
-//     menu.set_focusedLine(0);
-//     menu_position = 0;
-// }
-// void fn_led2()
-// {
-//     menu.change_screen(2);
-//     menu.set_focusedLine(0);
-//     menu_position = 1;
-// }
-// void fn_led3()
-// {
-//     menu.change_screen(2);
-//     menu.set_focusedLine(0);
-//     menu_position = 2;
-// }
-
-// void fn_on()
-// {
-//     switch (led_seleccionado)
-//     {
-//     case 1:
-//         digitalWrite(led1, HIGH);
-//         break;
-//     case 2:
-//         digitalWrite(led2, HIGH);
-//         break;
-//     case 3:
-//         digitalWrite(led3, HIGH);
-//         break;
-//     case 0:
-//         digitalWrite(led4, HIGH);
-//         digitalWrite(led5, HIGH);
-//         digitalWrite(led6, HIGH);
-//         break;
-//     }
-// }
-
-// void fn_off()
-// {
-//     switch (led_seleccionado)
-//     {
-//     case 1:
-//         digitalWrite(led1, LOW);
-//         break;
-//     case 2:
-//         digitalWrite(led2, LOW);
-//         break;
-//     case 3:
-//         digitalWrite(led3, LOW);
-//         break;
-//     case 0:
-//         digitalWrite(led4, LOW);
-//         digitalWrite(led5, LOW);
-//         digitalWrite(led6, LOW);
-//         break;
-//     }
-//}
-
-
-void fn_aceptar(){
-    //codigo similar al fn_atras
-}
-
-void fn_atras(){
-    menu.change_screen(1);
-    menu.set_focusedLine(0);
-}
-
-void cambiar_fecha(){
-    menu.change_screen(2);//pantalla a la que entras
-    menu.set_focusedLine(0);//posicion del cursor
-}
-
-void cambiar_horario(){
-    menu.change_screen(2);//pantalla a la que entras
-    menu.set_focusedLine(0);//posicion del cursor
-}
-
-
+    // menu.set_focusedLine(0);
 #endif

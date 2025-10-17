@@ -21,17 +21,17 @@ void iniciarRTC() {
     Wire.begin();
 
     if (!rtc.begin()) {
-        Serial.println("❌ Error: módulo RTC no encontrado");
+        Serial.println("Error: módulo RTC no encontrado");
         while (1);
     }
 
-    // ⚠️ Solo descomentar una vez para ajustar manualmente la hora:
+    // Solo descomentar una vez para ajustar manualmente la hora:
     // rtc.adjust(DateTime(2025, 11, 10, 6, 0, 0)); // Año, Mes, Día, Hora, Minuto, Segundo
 
-    // ✅ Esta línea sincroniza con la hora de compilación (solo ejecutar una vez)
+    // Esta línea sincroniza con la hora de compilación (solo ejecutar una vez)
     // rtc.adjust(DateTime(__DATE__, __TIME__));
 
-    Serial.println("✅ RTC DS3231 iniciado correctamente");
+    Serial.println("RTC DS3231 iniciado correctamente");
 }
 
 // ---------------------------------

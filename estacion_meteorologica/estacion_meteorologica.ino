@@ -42,6 +42,7 @@ void loop(){
   //funciones que actualizen la info de los sensores
   fecha = rtc.now();
 
+  navegarMenu();
   actualizarPantalla();
   leerBME();
   leerDS18B20();
@@ -52,10 +53,7 @@ void loop(){
   leerGY906();
   leerRTC();
   
-  // 5️⃣ Crear el texto de registro
-  String registro = tiempo + ", Temp: " + String(temperatura, 1) + "°C, Hum: " + String(humedad, 1) + "%, Luz: " + String(luz) + " lx, Tierra: " + String(tierra) + "%, CO2: " + String(co2) + " ppm";
-  
-  escribir("registro.txt", registro)
+  escribirSD("registro.txt");
 
   delay(1000);
 }
