@@ -3,51 +3,108 @@
 
 #include <Arduino.h>
 
+// ===================================================================
+// MÓDULO: SENSOR DE HUMEDAD DE SUELO CAPACITIVO (V2.0)
 // -------------------------------------------------------------------
-// Configuración del sensor de humedad de suelo (Capacitive Soil Moisture v2.0)
+// Este sensor mide la humedad del suelo mediante variaciones en su
+// capacitancia. A diferencia de los sensores resistivos, este modelo
+// no se corroe con el tiempo, ya que no tiene partes metálicas
+// expuestas al agua.
+//
+// Funciona con salida analógica: cuanto más húmedo está el suelo,
+// menor será la lectura analógica (valor ADC).
+// ===================================================================
+
 // -------------------------------------------------------------------
-#define PIN_SENSOR_TIERRA A0  // Pin analógico del sensor
+// PINES Y CONFIGURACIÓN
+// -------------------------------------------------------------------
+// Se define el pin analógico donde está conectado el sensor.
+// Puede cambiarse según el proyecto (por ejemplo, A0, A1, A2...).
+#define PIN_SENSOR_TIERRA A0
 
-// Valores calibrados (ajústalos según tus mediciones)
-const int AIR_VALUE = 588;   // Lectura en aire seco
-const int WATER_VALUE = 308; // Lectura sumergido en agua
+// -------------------------------------------------------------------
+// CALIBRACIÓN
+// -------------------------------------------------------------------
+// Los valores de "aire" y "agua" sirven como referencia para convertir
+// la lectura analógica (0–1023 en Arduino UNO) en un porcentaje.
+//
+// Para calibrar correctamente:
+//  1. Coloca el sensor completamente SECO (al aire libre) y anota
+//     el valor leído → este será AIR_VALUE.
+//  2. Luego sumérgelo en agua → ese valor será WATER_VALUE.
+//
+// Cuanto más húmedo el suelo, menor es la lectura.
+// -------------------------------------------------------------------
+const int AIR_VALUE = 588;   // Lectura típica en aire seco
+const int WATER_VALUE = 308; // Lectura típica completamente sumergido
 
-// Variable global para guardar el porcentaje de humedad
+// -------------------------------------------------------------------
+// VARIABLES GLOBALES
+// -------------------------------------------------------------------
+// Se guarda el porcentaje de humedad en esta variable global.
+// Su valor será entre 0% (suelo completamente seco) y 100% (suelo húmedo).
 int humedad_tierra = 0;
 
 // -------------------------------------------------------------------
-// Inicialización del sensor
+// FUNCIÓN: iniciarCSMSV2()
+// -------------------------------------------------------------------
+// Inicializa el sensor de humedad de suelo.
+//
+// Pasos que realiza:
+//  - Configura el pin del sensor como entrada analógica.
+//  - Imprime por Serial un mensaje de confirmación.
+//
+// NOTA: Aunque los pines analógicos no necesitan pinMode(INPUT),
+//       mantenerlo explícito mejora la legibilidad y evita errores.
 // -------------------------------------------------------------------
 void iniciarCSMSV2() {
-    pinMode(PIN_SENSOR_TIERA, INPUT);
+    pinMode(PIN_SENSOR_TIERRA, INPUT);
     Serial.println("Sensor de humedad de tierra iniciado correctamente.");
 }
 
 // -------------------------------------------------------------------
-// Lectura de humedad de suelo (devuelve porcentaje 0-100)
+// FUNCIÓN: leerCSMSV2()
+// -------------------------------------------------------------------
+// Realiza una lectura analógica del sensor y convierte el valor en
+// un porcentaje de humedad.
+//
+// Proceso:
+//  1. Se lee el valor analógico con analogRead() (rango 0–1023).
+//  2. Se aplica una transformación con la función map() para
+//     convertir la lectura en porcentaje 0–100.
+//  3. Se limita el resultado al rango válido (0–100%).
+//
+// Ejemplo de valores típicos:
+//  - 580 → 0% (suelo completamente seco)
+//  - 450 → 50% (suelo moderadamente húmedo)
+//  - 320 → 100% (suelo saturado de agua)
 // -------------------------------------------------------------------
 void leerCSMSV2() {
-    int lectura = analogRead(PIN_SENSOR_TIERRA);
+    int lectura = analogRead(PIN_SENSOR_TIERRA);  // Lectura analógica del sensor
 
-    // Convierte el valor analógico a porcentaje (ajustado con tus valores de calibración)
+    // Convierte el valor analógico (AIR→WATER) a porcentaje (0→100)
     humedad_tierra = map(lectura, AIR_VALUE, WATER_VALUE, 0, 100);
 
-    // Limita el rango (por seguridad)
+    // Limita el valor dentro del rango 0–100%
     if (humedad_tierra > 100) humedad_tierra = 100;
     if (humedad_tierra < 0)   humedad_tierra = 0;
 
-    // // Muestra el resultado
+    // ---------------------------------------------------------------
+    // (Opcional) Mostrar información por Serial
+    // ---------------------------------------------------------------
     // Serial.print("Humedad de tierra: ");
     // Serial.print(humedad_tierra);
     // Serial.println(" %");
 
-    // // Estado de humedad
+    // ---------------------------------------------------------------
+    // (Opcional) Estado del suelo según el nivel de humedad
+    // ---------------------------------------------------------------
     // if (humedad_tierra > 70) {
-    //     Serial.println("🌱 Tierra muy húmeda");
+    //     Serial.println("Tierra muy húmeda");
     // } else if (humedad_tierra > 40) {
-    //     Serial.println("🌿 Tierra húmeda");
+    //     Serial.println("Tierra húmeda");
     // } else {
-    //     Serial.println("🌾 Tierra seca");
+    //     Serial.println("Tierra seca");
     // }
 }
 
