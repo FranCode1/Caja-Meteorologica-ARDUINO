@@ -49,7 +49,7 @@ void leerRTC() {
 }
 
 // ---------------------------------
-// MOSTRAR EN SERIAL (DEBUG)
+// MOSTRAR EN SERIAL (DEBUG), esta nunca se usa asi que esta bien borrarla
 // ---------------------------------
 void mostrarHoraRTC() {
     leerRTC();

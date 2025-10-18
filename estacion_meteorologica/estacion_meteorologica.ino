@@ -15,6 +15,7 @@ void setup(){
 
   //funciones que inicien sensores
   iniciarPantalla();
+  iniciarBotonera();
   iniciarBME();
   iniciarDS18B20();
   iniciarCSMSV2();
