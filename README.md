@@ -70,14 +70,14 @@ Cada sensor tiene su propio archivo `.h` modularizado, con funciones:
 
 ## 📟 Ejemplo de salida Serial
 
-Fecha: 17/10/2025 - Hora: 13:45:22
-BME280 => Temp: 24.6 °C, Humedad: 52%, Presión: 1012 hPa
-DS18B20 => Temp Agua: 23.1 °C
-CSMSV2 => Humedad Tierra: 71 %
-BH1750 => Luz: 580 lx
-ML8511 => UV: 1.2 uv
-MQ135 => Calidad Aire: 345 ppm CO2
-GY906 => Temp IR: 25.9 °C
+Fecha y Hora: Lun 17/10/2025 13:45:22<br/>
+BME280 => Temp: 24.6 °C, Humedad: 52%, Presión: 1012 hPa<br/>
+DS18B20 => Temp Agua: 23.1 °C<br/>
+CSMSV2 => Humedad Tierra: 71 %<br/>
+BH1750 => Luz: 580 lx<br/>
+ML8511 => UV: 1.2 uv<br/>
+MQ135 => Calidad Aire: 345 ppm CO2<br/>
+GY906 => Temp IR: 25.9 °C<br/>
 -----------------------------
 
 ## 🔧 Calibración
