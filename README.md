@@ -17,18 +17,18 @@ El sistema está pensado para aplicaciones agrícolas, invernaderos o estaciones
 
 ## 🗂️ Estructura del Proyecto
 
-├── src/
-│   ├── main.ino
-│   ├── DS3231.h
-│   ├── GY906.h
-│   ├── MQ135.h
-│   ├── BH1750.h
-│   ├── CSMSV2.h
-│   ├── DHT22.h
-│   └── SDCard.h
-├── README.md
-└── /docs
-    └── esquema_circuito.png
+    ├── src/
+    │   ├── main.ino
+    │   ├── DS3231.h
+    │   ├── GY906.h
+    │   ├── MQ135.h
+    │   ├── BH1750.h
+    │   ├── CSMSV2.h
+    │   ├── DHT22.h
+    │   └── SDCard.h
+    ├── README.md
+    └── /docs
+        └── esquema_circuito.png
 
 Cada sensor tiene su propio archivo `.h` modularizado, con funciones:
 - `iniciarX()` → Inicializa el sensor
