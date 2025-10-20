@@ -10,7 +10,7 @@ El sistema está pensado para aplicaciones agrícolas, invernaderos o estaciones
 - 🌡️ MLX90614 — Sensor de temperatura infrarrojo
 - 💨 MQ-135 — Sensor de calidad del aire
 - 🌞 BH1750 — Sensor de luminosidad
-- DS18B20 - Sensor de Temperatura del Agua
+- 💧 DS18B20 — Sensor de Temperatura del Agua
 - 🌱 Capacitive Soil Moisture v2 — Humedad del suelo
 - 💾 Módulo SD — Registro de datos
 - ⚡ Comunicación I2C y monitoreo por Serial
