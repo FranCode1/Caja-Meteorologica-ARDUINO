@@ -9,8 +9,8 @@ El sistema está pensado para aplicaciones agrícolas, invernaderos o estaciones
 - ⏰ RTC DS3231 — Reloj en tiempo real
 - 🌡️ MLX90614 — Sensor de temperatura infrarrojo
 - 💨 MQ-135 — Sensor de calidad del aire
-- 💧 DHT22 / DHT11 — Sensor de temperatura y humedad
 - 🌞 BH1750 — Sensor de luminosidad
+- DS18B20 - Sensor de Temperatura del Agua
 - 🌱 Capacitive Soil Moisture v2 — Humedad del suelo
 - 💾 Módulo SD — Registro de datos
 - ⚡ Comunicación I2C y monitoreo por Serial
@@ -24,7 +24,6 @@ El sistema está pensado para aplicaciones agrícolas, invernaderos o estaciones
     │   ├── MQ135.h
     │   ├── BH1750.h
     │   ├── CSMSV2.h
-    │   ├── DHT22.h
     │   └── SDCard.h
     ├── README.md
     └── /docs
@@ -42,7 +41,6 @@ Cada sensor tiene su propio archivo `.h` modularizado, con funciones:
   - `RTClib.h`
   - `Adafruit_MLX90614.h`
   - `BH1750.h`
-  - `DHT.h`
   - `SD.h`
 - Fuente de 5V estable
 
