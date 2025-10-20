@@ -22,6 +22,7 @@
 float RO = 10.0;  // Valor de RO (resistencia del sensor en aire limpio) - se obtiene en la calibración
 float RS = 0.0;   // Resistencia actual del sensor (en funcionamiento)
 int VALOR = 0;    // Valor leído del ADC (0 a 1023)
+float ratio = 0.0;  // Relación RS/RO actual
 
 // =====================================================================
 // FUNCIÓN: calibrarMQ135()
@@ -39,6 +40,7 @@ void calibrarMQ135() {
     // Se toman 100 muestras del sensor para hacer un promedio más estable
     for (int i = 0; i < 100; i++) {
         int adc = analogRead(MQ135_PIN);               // Leer valor analógico (0–1023)
+        if (adc == 0) adc = 1;  // Evita división por cero
         float rs = RL * (1023.0 / adc - 1.0);          // Calcular resistencia RS usando la fórmula del divisor de tensión
         RS_sum += rs;                                  // Acumular lecturas
         delay(100);                                    // Pequeña pausa entre lecturas
@@ -71,8 +73,10 @@ void calibrarMQ135() {
 // Esta función devuelve solo el *ratio RS/RO*, que se puede registrar o usar en condiciones de control.
 float leerMQ135() {
     int adc = analogRead(MQ135_PIN);             // Leer señal analógica del sensor (0–1023)
+    if (adc == 0) adc = 1; // Previene división por cero
+
     RS = RL * (1023.0 / adc - 1.0);              // Calcular RS a partir del valor analógico
-    float ratio = RS / RO;                       // Calcular la relación RS/RO
+    ratio = RS / RO;                       // Calcular la relación RS/RO
 
     // --- OPCIONAL: Determinar calidad del aire ---
     // int calidad;
