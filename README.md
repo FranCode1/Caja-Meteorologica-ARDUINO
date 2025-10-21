@@ -57,7 +57,7 @@ Cada sensor tiene su propio archivo `.h` modularizado, con funciones:
 
 ## Diagrama del circuito
 
-![Diagrama del circuito](docs/esquema_circuito.png)
+![Diagrama del circuito](diagrama.jpeg)
 
 ## 🧠 Funcionamiento del Código
 
