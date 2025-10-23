@@ -20,7 +20,7 @@ El sistema está pensado para aplicaciones agrícolas, invernaderos o estaciones
 - TCA9548A I2C Multiplexer —
 - Transformador 5v 2A —
 - Baterias 3AA x3 —
-- Módulo de Conmutación Automática — 
+- Módulo de Conmutación Automática con Condensador — 
 
 ## 🗂️ Estructura del Proyecto
 
