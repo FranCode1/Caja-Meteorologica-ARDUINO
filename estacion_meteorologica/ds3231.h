@@ -21,7 +21,7 @@ RTC_DS3231 rtc;
 // =====================================================
 // Se actualizan cada vez que se lee la hora actual desde el módulo RTC.
 int DIA, MES, ANIO, HORA, MINUTO, SEGUNDO;
-String DIA_SEMANA; // Texto con el nombre del día (Lunes, Martes, etc.)
+String DIA_SEMANA, FECHA, HORARIO; // Texto con el nombre del día (Lunes, Martes, etc.)
 
 
 // =====================================================
@@ -102,6 +102,11 @@ String leerRTC() {
     MINUTO = fecha.minute();
     SEGUNDO = fecha.second();
     DIA_SEMANA = obtenerNombreDia(fecha.dayOfTheWeek() + 1); // +1 por compatibilidad con RTClib
+
+    // Formateo de fecha y hora como texto
+    FECHA = String(DIA) + "/" + String(MES) + "/" + String(ANIO);
+    HORARIO = String(HORA) + ":" + String(MINUTO) + ":" + String(SEGUNDO);
+
 
     // Creamos un "buffer" (una caja temporal) en memoria RAM
     // donde vamos a guardar una cadena de texto formateada.

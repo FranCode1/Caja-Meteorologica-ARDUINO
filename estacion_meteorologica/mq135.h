@@ -23,6 +23,10 @@ float RO = 10.0;  // Valor de RO (resistencia del sensor en aire limpio) - se ob
 float RS = 0.0;   // Resistencia actual del sensor (en funcionamiento)
 int VALOR = 0;    // Valor leído del ADC (0 a 1023)
 float ratio = 0.0;  // Relación RS/RO actual
+float ratio_anterior = 0; // Para detectar tendencia
+
+String calidad = "Desconocida"; // Estado textual del aire
+String tendencia = "Estable";   // Tendencia ("Mejorando", "Empeorando", "Estable")
 
 // =====================================================================
 // FUNCIÓN: calibrarMQ135()
@@ -52,9 +56,6 @@ void calibrarMQ135() {
     // Calcular RO (resistencia en aire limpio)
     RO = RS / CLEAN_AIR_RATIO;
 
-    // Serial.print("Calibración completada. RO = ");
-    // Serial.print(RO);
-    // Serial.println(" kΩ");
 }
 
 // =====================================================================
@@ -78,32 +79,46 @@ float leerMQ135() {
     RS = RL * (1023.0 / adc - 1.0);              // Calcular RS a partir del valor analógico
     ratio = RS / RO;                       // Calcular la relación RS/RO
 
-    // --- OPCIONAL: Determinar calidad del aire ---
-    // int calidad;
-    // if (ratio > 3.0)
-    //     calidad = 1; // Muy buena
-    // else if (ratio > 2.0)
-    //     calidad = 2; // Buena
-    // else if (ratio > 1.5)
-    //     calidad = 3; // Regular
-    // else
-    //     calidad = 4; // Mala
+    // -----------------------------
+    // Evaluar la calidad del aire
+    // -----------------------------
+    if (ratio > 3.0)
+    {
+        calidad = "Excelente";
+        digitalWrite(LED_ALERTA_GAS, LOW);
+    }
+    else if (ratio > 2.0)
+    {
+        calidad = "Buena";
+        digitalWrite(LED_ALERTA_GAS, LOW);
+    }
+    else if (ratio > 1.5)
+    {
+        calidad = "Regular";
+        digitalWrite(LED_ALERTA_GAS, LOW);
+    }
+    else if (ratio > 1.0)
+    {
+        calidad = "Mala";
+        digitalWrite(LED_ALERTA_GAS, HIGH);
+    }
+    else
+    {
+        calidad = "Crítica";
+        digitalWrite(LED_ALERTA_GAS, HIGH);
+    }
 
-    // --- OPCIONAL: Encender LED si el aire está contaminado ---
-    // if (calidad >= 4)
-    //     digitalWrite(LED_ALERTA_GAS, HIGH);
-    // else
-    //     digitalWrite(LED_ALERTA_GAS, LOW);
+    // -----------------------------
+    // Calcular tendencia
+    // -----------------------------
+    if (ratio > ratio_anterior + 0.1)
+        tendencia = "Empeorando ↑";
+    else if (ratio < ratio_anterior - 0.1)
+        tendencia = "Mejorando ↓";
+    else
+        tendencia = "Estable →";
 
-    // --- OPCIONAL: Mostrar datos por Serial ---
-    // Serial.print("RS: ");
-    // Serial.print(RS, 2);
-    // Serial.print(" kΩ  |  RO: ");
-    // Serial.print(RO, 2);
-    // Serial.print(" kΩ  |  RS/RO: ");
-    // Serial.print(ratio, 2);
-    // Serial.print("  |  Calidad: ");
-    // Serial.println(calidad);
+    ratio_anterior = ratio; // Guardar último valor
 
     // Retornar el valor RS/RO para guardar en SD o mostrar en LCD
     return ratio;
@@ -117,6 +132,7 @@ float leerMQ135() {
 void iniciarMQ135() {
     pinMode(MQ135_PIN, INPUT);           // Configura el pin de lectura analógica
     pinMode(LED_ALERTA_GAS, OUTPUT);     // Configura el LED indicador de gas
+    digitalWrite(LED_ALERTA_GAS, LOW);
     calibrarMQ135();                     // Calibrar el sensor (solo una vez idealmente)
 }
 

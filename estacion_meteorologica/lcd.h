@@ -14,12 +14,11 @@
 #include <LiquidMenu.h>         // Librería para menús dinámicos en pantallas LCD
 
 // Librerías de módulos y sensores
-#include "buttons.h"            // Control de botones físicos
-#include "bme280.h"             // Sensor de temperatura, humedad y presión atmosférica
+#include "navegacion.h"         // Control de navegación por menú
+#include "bmp280.h"             // Sensor de temperatura, humedad y presión atmosférica
 #include "ds18b20.h"            // Sensor de temperatura del agua
 #include "csmsv2.h"             // Sensor de humedad de la tierra
 #include "bh1750.h"             // Sensor de luz ambiental
-#include "ml8511.h"             // Sensor de rayos UV
 #include "mq135.h"              // Sensor de gases y CO2
 #include "gy906.h"              // Sensor infrarrojo de temperatura
 #include "ds3231.h"             // Módulo RTC (reloj en tiempo real)
@@ -52,10 +51,10 @@ LiquidScreen pantalla0(linea1a, linea2a, linea3a, linea4a);
 // PANTALLA 1 - SENSOR BME280
 // ---------------------------------------------------------------------
 // Muestra temperatura, humedad y presión atmosférica.
-LiquidLine linea1b(0, 0, "<=====BME280======>");
-LiquidLine linea2b(0, 1, "Temperatura: ", temp_bme280, " °C");
-LiquidLine linea3b(0, 2, "Humedad: ", humedad_bme280, "%");
-LiquidLine linea4b(0, 3, "Presión Atm: ", presion_bme280, " hPa");
+LiquidLine linea1b(0, 0, "<=====BMP280======>");
+LiquidLine linea2b(0, 1, "Temperatura: ", temp_bmp280, " °C");
+LiquidLine linea4b(0, 2, "Presión Atm: ", presion_bmp280, " hPa");
+LiquidLine linea3b(0, 3, "Altitud: ", altitud_bmp280, "m");
 LiquidScreen pantalla1(linea1b, linea2b, linea3b, linea4b);
 
 // ---------------------------------------------------------------------
@@ -68,19 +67,19 @@ LiquidLine linea4c(0, 3, "Humedad Tierra: ", humedad_tierra, " %");
 LiquidScreen pantalla2(linea1c, linea2c, linea3c, linea4c);
 
 // ---------------------------------------------------------------------
-// PANTALLA 3 - SENSOR DE LUZ (BH1750) Y RAYOS UV (ML8511)
+// PANTALLA 3 - SENSOR MQ135 (GASES)
 // ---------------------------------------------------------------------
-LiquidLine linea1d(0, 0, "<======BH1750======>");
-LiquidLine linea2d(0, 1, "Lux: ", lux, " lx");
-LiquidLine linea3d(0, 2, "<======ML8511======>");
-LiquidLine linea4d(0, 3, "Rayos UV: ", uvIndex, " uv");
+LiquidLine linea1d(0, 0, "<======MQ-135======>");
+LiquidLine linea2d(0, 1, "CO2: ", ratio, "%");
+LiquidLine linea3d(0, 2, "Estado: ", calidad);
+LiquidLine linea4d(0, 3, "Tendencia: ", tendencia);
 LiquidScreen pantalla3(linea1d, linea2d, linea3d, linea4d);
 
 // ---------------------------------------------------------------------
-// PANTALLA 4 - SENSOR MQ135 (GASES) Y GY906 (INFRARROJO)
+// PANTALLA 4 - SENSOR DE LUZ (BH1750) Y GY906 (INFRARROJO)
 // ---------------------------------------------------------------------
-LiquidLine linea1e(0, 0, "<======MQ-135======>");
-LiquidLine linea2e(0, 1, "Calidad Aire: ", ratio, "% Co2"); // TODO: revisar variable ratio
+LiquidLine linea1e(0, 0, "<======BH1750======>");
+LiquidLine linea2e(0, 1, "Lux: ", lux, " lx");
 LiquidLine linea3e(0, 2, "<======GY-906======>");
 LiquidLine linea4e(0, 3, "Temp. Infrarroja: ", TEMP_OBJETO_GY906, " °C");
 LiquidScreen pantalla4(linea1e, linea2e, linea3e, linea4e);
@@ -90,9 +89,9 @@ LiquidScreen pantalla4(linea1e, linea2e, linea3e, linea4e);
 // ---------------------------------------------------------------------
 // Incluye fecha, hora y batería (opcional).
 LiquidLine linea1f(0, 0, "<======AJUSTES=====>");
-LiquidLine linea2f(1, 1, "Día: ", DIA, "/", MES, "/", ANIO);
-LiquidLine linea3f(1, 2, "Hora: ", HORA, ":", MINUTO, ":", SEGUNDO);
-LiquidLine linea4f(0, 3, "BATERIA: ", bateria, "%"); // (opcional)
+LiquidLine linea2f(1, 1, "Día: ", FECHA);
+LiquidLine linea3f(1, 2, "Hora: ", HORARIO);
+LiquidLine linea4f(0, 3, "BATERIA: ", porcentajeBateria, "%"); // (opcional)
 LiquidScreen pantalla5(linea1f, linea2f, linea3f, linea4f);
 
 // ---------------------------------------------------------------------
@@ -103,7 +102,7 @@ LiquidScreen pantalla5(linea1f, linea2f, linea3f, linea4f);
 
 LiquidLine linea1g(0, 0, "<===CAMBIAR FECHA==>");
 LiquidLine linea2g(0, 1, "");
-LiquidLine linea3g(0, 2, DIA, "/", MES, "/", ANIO);
+LiquidLine linea3g(0, 2, FECHA);
 LiquidLine linea4g(0, 3, "");
 LiquidScreen pantalla6(linea1g, linea2g, linea3g, linea4g);
 
@@ -115,7 +114,7 @@ LiquidScreen pantalla7(linea1h, linea2h, linea3h, linea4h);
 
 LiquidLine linea1i(0, 0, "<==CAMBIAR HORARIO=>");
 LiquidLine linea2i(0, 1, "");
-LiquidLine linea3i(0, 2, HORA, ":", MINUTO, ":", SEGUNDO);
+LiquidLine linea3i(0, 2, HORARIO);
 LiquidLine linea4i(0, 3, "");
 LiquidScreen pantalla8(linea1i, linea2i, linea3i, linea4i);
 

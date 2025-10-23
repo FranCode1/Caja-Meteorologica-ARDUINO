@@ -3,6 +3,7 @@
 
 #include <Wire.h>                    // Librería base para comunicación I2C
 #include <Adafruit_MLX90614.h>       // Librería oficial para el sensor infrarrojo MLX90614
+//#include <DFRobot_MLX90614.h> //libreria del sensor
 
 // =====================================================================
 // OBJETO DEL SENSOR
@@ -10,6 +11,7 @@
 // Se crea un objeto "gy906" de la clase Adafruit_MLX90614.
 // Este objeto permite comunicarse con el sensor GY-906 a través del bus I2C.
 Adafruit_MLX90614 gy906 = Adafruit_MLX90614();
+//DFRobot_MLX90614 gy906 = Adafruit_MLX90614();
 
 // =====================================================================
 // VARIABLES DE MEDICIÓN

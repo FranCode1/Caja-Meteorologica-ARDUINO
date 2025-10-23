@@ -7,6 +7,7 @@
 
 #include <SPI.h>  // Permite la comunicación SPI (Serial Peripheral Interface)
 #include <SD.h>   // Librería oficial de Arduino para manejar tarjetas SD
+#include <EEPROM.h> // Permite leer y escribir en la memoria EEPROM interna
 
 // =====================================================
 //  LIBRERÍAS DE LOS SENSORES Y MÓDULOS USADOS
@@ -14,12 +15,10 @@
 // Se incluyen porque las funciones y variables de cada sensor se usarán
 // dentro de las funciones que escriben datos en la tarjeta SD.
 
-#include "buttons.h"            // Librería de manejo de botones físicos
-#include "bme.h"                // Sensor BME280 → temperatura, humedad, presión atmosférica
+#include "bmp280.h"             // Sensor BMP280 → temperatura, presión atmosférica, altitud
 #include "ds18b20.h"            // Sensor DS18B20 → temperatura del agua
 #include "csmsv2.h"             // Sensor CSMSV2 → humedad del suelo
 #include "bh1750.h"             // Sensor BH1750 → intensidad lumínica (lux)
-#include "ml8511.h"             // Sensor ML8511 → radiación ultravioleta (UV)
 #include "mq135.h"              // Sensor MQ-135 → gases / calidad del aire (CO₂)
 #include "gy906.h"              // Sensor GY-906 → temperatura por infrarrojos
 #include "ds3231.h"             // Módulo DS3231 → reloj en tiempo real (RTC)
@@ -32,7 +31,10 @@
 // Pin Chip Select (SS) del módulo microSD.
 // Este pin puede variar según la placa o el módulo SD que se use.
 // Ejemplo común: 10 para Arduino UNO, 5 para ESP32, etc.
-#define SD_CS_PIN 10   
+#define SD_CS_PIN 10
+
+// Variable contador para los ID's de los registros guardados.
+int registroID = 0; // valor temporal en RAM
 
 // Variable global para manejar los archivos en la tarjeta SD.
 // Se usa para abrir, leer y escribir archivos.
@@ -54,6 +56,11 @@ bool iniciarSD() {
         Serial.println("Error: no se pudo inicializar la tarjeta SD");
         return false;
     }
+
+    // Leer el último ID guardado
+    EEPROM.get(0, registroID);
+    if (registroID < 1)
+        registroID = 1; // Comenzar desde 1 si no hay registros previos
 
     // Si la inicialización fue exitosa, confirmamos por monitor serie
     Serial.println("Tarjeta microSD lista para usar");
@@ -83,21 +90,23 @@ bool escribirSD(const char *nombreArchivo) {
         // BLOQUE DE ESCRITURA DE DATOS
         // =====================================================
 
+        // --- ID Registro ---
+        archivo.print("Registro ID: ");
+        archivo.println(String(registroID++)); // Incrementa el ID para el próximo registro
+
         // --- Reloj RTC ---
         archivo.print("Hora y Fecha: ");
         archivo.println(leerRTC());  // leerRTC() viene del módulo DS3231
 
-        // --- Sensor BME280 ---
-        archivo.print("BME280 → ");
-        archivo.print("Temp: "); archivo.print(temp_bme280); archivo.print(" °C ");
-        archivo.print("Hum: "); archivo.print(humedad_bme280); archivo.print(" % ");
-        archivo.print("Pres: "); archivo.print(presion_bme280); archivo.println(" hPa");
+        // --- Sensor BMP280 ---
+        archivo.print("BMP280 → ");
+        archivo.print("Temp: "); archivo.print(temp_bmp280); archivo.print(" °C ");
+        archivo.print("Pres: "); archivo.print(presion_bmp280); archivo.print(" hPa");
+        archivo.print("Alti: "); archivo.print(altitud_bmp280); archivo.println(" m ");
 
         // --- Sensor DS18B20 (agua) ---
         archivo.print("DS18B20 → ");
         archivo.print("Temp. Agua: "); archivo.print(temp_ds18b20); archivo.println(" °C");
-        // NOTA: no se puede usar concatenación de strings con el operador '+'
-        // como en otros lenguajes ("Temp: " + variable), ya que Arduino no lo soporta así.
 
         // --- Sensor CSMSV2 (humedad de tierra) ---
         archivo.print("CSMSV2 → ");
@@ -107,13 +116,11 @@ bool escribirSD(const char *nombreArchivo) {
         archivo.print("BH1750 → ");
         archivo.print("Lux: "); archivo.print(lux); archivo.println(" lx");
 
-        // --- Sensor ML8511 (rayos UV) ---
-        archivo.print("ML8511 → ");
-        archivo.print("Rayos UV: "); archivo.print(uvIndex); archivo.println(" uv");
-
         // --- Sensor MQ-135 (gases / CO₂) ---
         archivo.print("MQ-135 → ");
-        archivo.print("Calidad Aire: "); archivo.print(ratio); archivo.println("% CO2");
+        archivo.print("Calidad Aire: "); archivo.print(ratio); archivo.print("% CO2");
+        archivo.print("Calidad Aire: "); archivo.print(ratio); archivo.print("% CO2");
+        archivo.print("Calidad Aire: "); archivo.print(ratio);archivo.println("% CO2");
 
         // --- Sensor GY-906 (infrarrojos) ---
         archivo.print("GY-906 → ");
@@ -135,6 +142,11 @@ bool escribirSD(const char *nombreArchivo) {
         Serial.println(nombreArchivo);
         return false;
     }
+
+    // Guardar el nuevo ID en EEPROM
+    EEPROM.put(0, registroID);
+
+    return true;
 }
 
 
