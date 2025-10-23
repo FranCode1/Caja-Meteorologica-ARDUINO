@@ -1,1 +1,0 @@
-separar los componentes que usan 5v de los 3.3v
