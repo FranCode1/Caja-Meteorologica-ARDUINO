@@ -28,6 +28,12 @@
 // CONFIGURACIÓN DEL PIN DE DATOS
 // -------------------------------------------------------------------
 #define DS18B20_PIN 2 // Pin digital del bus OneWire
+#define LED_ALERTA_TEMP 5 // 🔴 LED compartido con el otro sensor en esta pantalla
+
+#define TEMP_MAX_DS18B20 37.0  // Temperatura máxima segura (°C)
+#define TEMP_MIN_DS18B20 -10.0 // Temperatura mínima (opcional, puedes quitarla si no la necesitás)
+
+bool alerta_temp = false; // Variable para detectar si el led esta en uso por el sensor csmsv2
 
 // -------------------------------------------------------------------
 // OBJETOS DE CONTROL DEL SENSOR
@@ -61,6 +67,9 @@ float temp_ds18b20 = 0.0;
  */
 void iniciarDS18B20() {
     sensors.begin();  // Inicia la comunicación con el sensor
+    pinMode(LED_ALERTA_TEMP, OUTPUT);
+    digitalWrite(LED_ALERTA_TEMP, LOW);
+
     Serial.println("Sensor DS18B20 iniciado correctamente.");
 }
 
@@ -83,6 +92,24 @@ void iniciarDS18B20() {
 void leerDS18B20() {
     sensors.requestTemperatures();           // Envía comando de lectura
     temp_ds18b20 = sensors.getTempCByIndex(0); // Lee la temperatura del primer sensor
+
+    bool peligro = false;
+
+    // --- Condiciones peligrosas ---
+    if (temp_ds18b20 > TEMP_MAX_DS18B20 || temp_ds18b20 < TEMP_MIN_DS18B20)
+    {
+        peligro = true;
+    }
+
+    // --- Control del LED compartido ---
+    if (peligro)
+    {
+        digitalWrite(LED_ALERTA_TEMP, HIGH); // 🔴 Enciende LED si hay peligro
+    }
+    else
+    {
+        digitalWrite(LED_ALERTA_TEMP, LOW); // 🟢 Apaga LED si está todo bien
+    }
 
     // --- DEBUG OPCIONAL ---
     // Serial.print("🌡️ Temperatura DS18B20: ");

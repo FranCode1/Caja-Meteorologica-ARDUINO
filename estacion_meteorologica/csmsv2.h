@@ -2,6 +2,7 @@
 #define _CSMSV2_H
 
 #include <Arduino.h>
+#include <ds18b20.h> // Para compartir el LED de alerta
 
 // ===================================================================
 // MÓDULO: SENSOR DE HUMEDAD DE SUELO CAPACITIVO (V2.0)
@@ -20,7 +21,12 @@
 // -------------------------------------------------------------------
 // Se define el pin analógico donde está conectado el sensor.
 // Puede cambiarse según el proyecto (por ejemplo, A0, A1, A2...).
-#define PIN_SENSOR_TIERRA A0
+#define PIN_SENSOR_TIERRA A0 // Pin analógico del sensor
+#define LED_ALERTA_TEMP 5 // 🔴 Mismo LED compartido con el DS18B20
+
+// Umbrales de alerta
+#define HUMEDAD_MIN_SEGURA 25 // Por debajo de este valor, el suelo está demasiado seco
+#define HUMEDAD_MAX_SEGURA 90 // Por encima de este valor, el suelo está saturado o hay exceso de agua
 
 // -------------------------------------------------------------------
 // CALIBRACIÓN
@@ -44,6 +50,7 @@ const int WATER_VALUE = 308; // Lectura típica completamente sumergido
 // Se guarda el porcentaje de humedad en esta variable global.
 // Su valor será entre 0% (suelo completamente seco) y 100% (suelo húmedo).
 int humedad_tierra = 0;
+bool alerta_tierra = false; // Guarda si el sensor activó alerta (para compartir con otros sensores)
 
 // -------------------------------------------------------------------
 // FUNCIÓN: iniciarCSMSV2()
@@ -59,6 +66,8 @@ int humedad_tierra = 0;
 // -------------------------------------------------------------------
 void iniciarCSMSV2() {
     pinMode(PIN_SENSOR_TIERRA, INPUT);
+    pinMode(LED_ALERTA_TEMP, OUTPUT); // Compartido
+    digitalWrite(LED_ALERTA_TEMP, LOW);
     Serial.println("Sensor de humedad de tierra iniciado correctamente.");
 }
 
@@ -81,20 +90,33 @@ void iniciarCSMSV2() {
 // -------------------------------------------------------------------
 void leerCSMSV2() {
     int lectura = analogRead(PIN_SENSOR_TIERRA);  // Lectura analógica del sensor
+    
+    humedad_tierra = map(lectura, AIR_VALUE, WATER_VALUE, 0, 100); // Convierte el valor analógico (AIR→WATER) a porcentaje (0→100)
+    humedad_tierra = constrain(humedad_tierra, 0, 100); // Limita el valor dentro del rango 0–100%
 
-    // Convierte el valor analógico (AIR→WATER) a porcentaje (0→100)
-    humedad_tierra = map(lectura, AIR_VALUE, WATER_VALUE, 0, 100);
+    // Evaluar condición peligrosa
+    alerta_tierra = (humedad_tierra < HUMEDAD_MIN_SEGURA || humedad_tierra > HUMEDAD_MAX_SEGURA);
 
-    // Limita el valor dentro del rango 0–100%
-    if (humedad_tierra > 100) humedad_tierra = 100;
-    if (humedad_tierra < 0)   humedad_tierra = 0;
+    // --- Control del LED compartido ---
+    if (alerta_tierra){
+        digitalWrite(LED_ALERTA_TEMP, HIGH); // ⚠️ Enciende LED si hay peligro
+    }
+    else{
+        // Solo apagar si el otro sensor (DS18B20) tampoco está en alerta
+        // Esto requiere que el DS18B20 exponga su variable de estado
+        extern bool alerta_temp;
+        if (!alerta_temp){
+            digitalWrite(LED_ALERTA_TEMP, LOW);
+        }
+    }
 
     // ---------------------------------------------------------------
     // (Opcional) Mostrar información por Serial
     // ---------------------------------------------------------------
-    // Serial.print("Humedad de tierra: ");
+    // Serial.print("Humedad tierra: ");
     // Serial.print(humedad_tierra);
-    // Serial.println(" %");
+    // Serial.print(" % | LED: ");
+    // Serial.println(alerta_tierra ? "ENCENDIDO" : "OK");
 
     // ---------------------------------------------------------------
     // (Opcional) Estado del suelo según el nivel de humedad

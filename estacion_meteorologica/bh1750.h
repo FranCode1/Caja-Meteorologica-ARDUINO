@@ -32,7 +32,11 @@ BH1750 sensorBH1750;
 //   - 100 lx → Luz tenue interior
 //   - 400–1000 lx → Oficina iluminada
 //   - 10,000 lx o más → Luz solar directa
-float lux = 0;
+float lux = 0;                  // Luz ambiental en lux
+const int UMBRAL_LUZ_BAJA = 50; // Menos de 50 lx = ambiente oscuro
+
+// LED compartido con el sensor GY906
+#define LED_ALERTA_LUZ_TEMP 9 // Puedes cambiar este pin según tu placa
 
 // (Opcional) Umbral para activar una acción según el nivel de luz.
 // const int UMBRAL_LUZ = 30;  // Si la luz cae por debajo de 30 lx, se considera baja.
@@ -53,7 +57,8 @@ float lux = 0;
 void iniciarBH1750() {
     Wire.begin();              // Inicia la comunicación I2C
     sensorBH1750.begin();      // Inicia el sensor BH1750
-    // pinMode(PIN_LED, OUTPUT); // Configura LED opcional de aviso
+    pinMode(LED_ALERTA_LUZ_TEMP, OUTPUT);
+    digitalWrite(LED_ALERTA_LUZ_TEMP, LOW);
 
     Serial.println("Sensor BH1750 iniciado correctamente.");
 }
@@ -78,21 +83,25 @@ void iniciarBH1750() {
 void leerBH1750() {
     lux = sensorBH1750.readLightLevel();  // Lee la intensidad lumínica
 
-    // Ejemplo de salida por serial:
-    // Serial.print("Nivel de luz: ");
+    // ---------------------------------------------------------------
+    // DETECCIÓN DE PELIGRO O ALERTA
+    // ---------------------------------------------------------------
+    // Si la luz es demasiado baja, encendemos el LED de alerta
+    // (por ejemplo, indicando condiciones inseguras o baja visibilidad)
+    if (lux < UMBRAL_LUZ_BAJA)
+    {
+        digitalWrite(LED_ALERTA_LUZ_TEMP, HIGH);
+    }
+    else
+    {
+        // El apagado del LED se controla junto con el GY906
+        // para evitar conflictos (se apaga solo si ambos están normales)
+    }
+
+    // --- DEBUG OPCIONAL ---
+    // Serial.print("💡 Luz: ");
     // Serial.print(lux);
     // Serial.println(" lx");
-
-    // ---------------------------------------------------------------
-    // (OPCIONAL) Control simple por umbral:
-    // Si la luz ambiental es menor al umbral definido,
-    // se enciende un LED como indicador visual.
-    // ---------------------------------------------------------------
-    // if (lux < UMBRAL_LUZ) {
-    //     digitalWrite(PIN_LED, HIGH);  // Luz ambiental baja
-    // } else if (lux > UMBRAL_LUZ + 20) {
-    //     digitalWrite(PIN_LED, LOW);   // Luz ambiental alta
-    // }
 }
 
 #endif

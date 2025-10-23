@@ -51,6 +51,19 @@ void leerGY906() {
     // Lectura de temperatura del objeto apuntado por el sensor
     TEMP_OBJETO_GY906 = gy906.readObjectTempC();
 
+    // Logica del umbral para el LED de alerta
+    bool alertaTemp = (TEMP_OBJETO_GY906 > 40.0); // Temperatura peligrosa
+    bool alertaLuz = (lux < UMBRAL_LUZ_BAJA);     // Luz muy baja
+
+    if (alertaTemp || alertaLuz)
+    {
+        digitalWrite(LED_ALERTA_LUZ_TEMP, HIGH);
+    }
+    else
+    {
+        digitalWrite(LED_ALERTA_LUZ_TEMP, LOW);
+    }
+
     // Las lecturas se almacenan en variables globales para poder usarlas
     // desde otros módulos, como el que registra los datos en la microSD.
     // Si quisieras depurar, podés descomentar las siguientes líneas:
