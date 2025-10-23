@@ -7,13 +7,20 @@ El sistema está pensado para aplicaciones agrícolas, invernaderos o estaciones
 ## ✨ Características
 
 - ⏰ RTC DS3231 — Reloj en tiempo real
-- 🌡️ MLX90614 — Sensor de temperatura infrarrojo
+- 🌡️ MLX90614(GY-906) — Sensor de temperatura infrarrojo
 - 💨 MQ-135 — Sensor de calidad del aire
 - 🌞 BH1750 — Sensor de luminosidad
 - 💧 DS18B20 — Sensor de Temperatura del Agua
 - 🌱 Capacitive Soil Moisture v2 — Humedad del suelo
 - 💾 Módulo SD — Registro de datos
 - ⚡ Comunicación I2C y monitoreo por Serial
+- BMP280 —
+- Pantalla LCD 20x4 con interfaz i2c —
+- Joystick y botones —
+- TCA9548A I2C Multiplexer —
+- Transformador 5v 2A —
+- Baterias 3AA x3 —
+- Módulo de Conmutación Automática — 
 
 ## 🗂️ Estructura del Proyecto
 
