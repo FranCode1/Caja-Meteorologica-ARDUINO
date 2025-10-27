@@ -2,7 +2,7 @@
 #define _CSMSV2_H
 
 #include <Arduino.h>
-#include <ds18b20.h> // Para compartir el LED de alerta
+#include "ds18b20.h" // Para compartir el LED de alerta
 
 // ===================================================================
 // MÓDULO: SENSOR DE HUMEDAD DE SUELO CAPACITIVO (V2.0)

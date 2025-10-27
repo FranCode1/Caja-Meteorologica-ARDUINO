@@ -3,9 +3,19 @@
 
 #include "lcd.h"
 
+
+
 // =====================================================
 //  CONTROL DE LEDS POR PANTALLA (usando LiquidMenu)
 // =====================================================
+
+extern LiquidScreen pantalla1;
+extern LiquidScreen pantalla2;
+extern LiquidScreen pantalla3;
+extern LiquidScreen pantalla4;
+extern LiquidScreen pantalla5;
+
+extern LiquidMenu menu;
 
 // =============================================================
 // CONFIGURACIÓN DE LEDS POR PANTALLA

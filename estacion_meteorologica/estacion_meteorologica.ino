@@ -1,4 +1,3 @@
-#include "multiplexor.h"
 #include "lcd.h"
 #include "navegacion.h"
 #include "bmp280.h"
@@ -10,6 +9,7 @@
 #include "gy906.h"
 #include "ds3231.h"
 #include "microsd.h"
+#include "leds_guia.h"
 
 void setup()
 {
@@ -17,19 +17,10 @@ void setup()
   Wire.begin();
 
   // Dispositivos que funcionan con i2c
-  seleccionarCanal_i2c(CANAL_LCD);
   iniciarPantalla();
-
-  seleccionarCanal_i2c(CANAL_RTC);
   iniciarRTC();
-
-  seleccionarCanal_i2c(CANAL_BMP280);
   iniciarBMP();
-
-  seleccionarCanal_i2c(CANAL_BH1750);
   iniciarBH1750();
-
-  seleccionarCanal_i2c(CANAL_GY906);
   iniciarGY906();
 
   //Dispositivos que no funcionan con i2c
@@ -45,31 +36,22 @@ void setup()
   calibrarMQ135();
 
   // Mostrar pantalla de bienvenida
-  menu.change_screen(0);  // pantalla0 = bienvenida
+  menu.change_screen(&pantalla0);  // pantalla0 = bienvenida
   menu.update();          // dibujar en pantalla
   delay(3000);            // esperar 3 segundos
 
   // Cambiar a pantalla principal (BME280)
-  menu.change_screen(1);
+  menu.change_screen(&pantalla1);
   menu.update();
 }
 void loop()
 {
   // Dispositivos que funcionan con i2c
-  seleccionarCanal_i2c(CANAL_LCD);
   actualizarPantalla();
-
-  seleccionarCanal_i2c(CANAL_RTC);
   fecha = rtc.now();
   leerRTC();
-
-  seleccionarCanal_i2c(CANAL_BMP280);
   leerBMP();
-
-  seleccionarCanal_i2c(CANAL_BH1750);
   leerBH1750();
-
-  seleccionarCanal_i2c(CANAL_GY906);
   leerGY906();
 
   // Dispositivos que funcionan con i2c

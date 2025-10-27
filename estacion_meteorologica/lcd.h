@@ -23,6 +23,7 @@
 #include "gy906.h"              // Sensor infrarrojo de temperatura
 #include "ds3231.h"             // Módulo RTC (reloj en tiempo real)
 #include "microsd.h"            // Módulo MicroSD para almacenamiento
+#include "leds_guia.h"          // Control de LEDs guía
 
 // =====================================================================
 // 💡 CONFIGURACIÓN DEL LCD
@@ -111,11 +112,7 @@ LiquidScreen pantalla11(linea1l, linea2l, linea3l, linea4l);
 // =====================================================================
 // Se crea el menú "menu" con todas las pantallas definidas arriba.
 // El orden aquí determina cómo se navega con los botones.
-LiquidMenu menu(
-    lcd,
-    pantalla0, pantalla1, pantalla2, pantalla3, pantalla4,
-    pantalla5, pantalla11
-);
+LiquidMenu menu(lcd); // Objeto menú global declarado en globals.h
 
 // =====================================================================
 // ⚙️ FUNCIONES PRINCIPALES DE CONTROL DEL LCD
@@ -127,10 +124,19 @@ LiquidMenu menu(
 // Inicializa la pantalla LCD y el menú de pantallas.
 // Se debe llamar dentro del setup() del programa principal.
 void iniciarPantalla() {
-    lcd.init();       // Inicializa la comunicación con el LCD
+    lcd.begin(20, 4);       // Inicializa la comunicación con el LCD // Usar begin() en lugar de init()
     lcd.backlight();  // Enciende la retroiluminación
     lcd.clear();      // Limpia la pantalla
     menu.init();      // Inicializa el sistema de menús
+
+    menu.add_screen(pantalla0);
+    menu.add_screen(pantalla1);
+    menu.add_screen(pantalla2);
+    menu.add_screen(pantalla3);
+    menu.add_screen(pantalla4);
+    menu.add_screen(pantalla5);
+    menu.add_screen(pantalla11);
+
     menu.update();    // Actualiza la primera visualización
 }
 

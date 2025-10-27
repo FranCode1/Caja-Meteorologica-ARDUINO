@@ -80,7 +80,7 @@ void iniciarBMP() {
 void leerBMP() {
     temp_bmp280 = bmp.readTemperature();
     presion_bmp280 = bmp.readPressure() / 100.0F; // Conversión de Pa → hPa
-    altitud_bmp280 = 44330 * (1.0 - pow(presion / 1013.25, 0.1903));
+    altitud_bmp280 = 44330 * (1.0 - pow(presion_bmp280 / 1013.25, 0.1903));
 
     bool peligro = false;
 

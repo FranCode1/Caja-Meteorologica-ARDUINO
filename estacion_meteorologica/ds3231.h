@@ -14,6 +14,7 @@
 // =====================================================
 // Este objeto maneja todas las funciones del módulo DS3231.
 RTC_DS3231 rtc;
+DateTime fecha;
 
 
 // =====================================================

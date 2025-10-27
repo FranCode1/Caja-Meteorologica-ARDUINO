@@ -2,7 +2,7 @@
 #define _NAVEGACION_H_
 
 #include <Arduino.h>
-#include "lcd.h" // Para controlar el menú desde acá
+#include "globals.h" // Para controlar el menú desde acá
 
 // ===================================================
 // CONFIGURACIÓN DE PINES DEL JOYSTICK KY-023
