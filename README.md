@@ -105,3 +105,6 @@ Este proyecto está bajo la licencia MIT — ver el archivo [LICENSE](LICENSE) p
 
 
 link de fritzing necesario: https://www.mediafire.com/file/of6y8ojzf2p2hle/Windows-fritzing-1.0.4.zip/file
+
+link de las librerias del proyecto: 
+https://www.mediafire.com/folder/pfqjpldbqcju3/Arduino
