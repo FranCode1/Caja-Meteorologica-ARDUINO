@@ -127,7 +127,7 @@ void iniciarPantalla() {
     lcd.begin(20, 4);       // Inicializa la comunicación con el LCD // Usar begin() en lugar de init()
     lcd.backlight();  // Enciende la retroiluminación
     lcd.clear();      // Limpia la pantalla
-    menu.init();      // Inicializa el sistema de menús
+    //menu.init();      // Inicializa el sistema de menús
 
     menu.add_screen(pantalla0);
     menu.add_screen(pantalla1);
