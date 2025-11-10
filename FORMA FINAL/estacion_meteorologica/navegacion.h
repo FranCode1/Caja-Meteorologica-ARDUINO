@@ -45,16 +45,20 @@ inline void leerNavegacion() {
     if (!digitalRead(BTN_IZQ)) {
         if (pantallaActual == 0) pantallaActual = totalPantallas - 1;
         else pantallaActual--;
+        lcd.clear();
         mostrarPantalla(pantallaActual);
         ultimoMovimiento = ahora;
+        // lcd.clear();
         return;
     }
 
     // Botón DERECHA
     if (!digitalRead(BTN_DER)) {
         pantallaActual = (pantallaActual + 1) % totalPantallas;
+        lcd.clear();
         mostrarPantalla(pantallaActual);
         ultimoMovimiento = ahora;
+        // lcd.clear();
         return;
     }
 }

@@ -32,7 +32,8 @@ void setup() {
   Serial.begin(9600);
   Wire.begin();
 
-  iniciarSD();                // Inicia microSD
+  // modoSimulacion();  // 👈 Carga valores de prueba
+
   iniciarPantalla();          // LCD
   iniciarLedsPantalla();      // LEDs
   cambiarLedPantalla(1);      // LED inicial
@@ -46,6 +47,7 @@ void setup() {
   iniciarNavegacion();        // Botones
   calibrarMQ135();            // Calibración gases
   mostrarPantalla(1);         // Pantalla inicial
+  iniciarSD();                // Inicia microSD
 }
 
 // =====================================================
@@ -62,5 +64,28 @@ void loop() {
   leerMQ135();                // CO₂
   escribirSD("registro.txt"); // Guarda datos
   cambiarLedPantalla(pantallaActual); // LED activo
-  delay(1000);                // Actualización cada segundo
+
+  actualizarPantalla(); // 👈 Esto refresca el LCD cada segundo
+  // delay(1000);                // Actualización cada segundo
 }
+
+
+// void modoSimulacion() {
+//   temp_bmp280 = 23.5;
+//   presion_bmp280 = 1013.2;
+//   altitud_bmp280 = 50.0;
+
+//   temp_ds18b20 = 24.0;
+//   humedad_tierra = 65;
+
+//   ratio = 0.03;
+//   calidad = "Buena";
+//   tendencia = "Estable";
+
+  // lux = 250.0;
+  // TEMP_OBJETO_GY906 = 25.5;
+
+  // FECHA = "08/11/2025";
+  // HORARIO = "15:45:00";
+  // DIA_SEMANA = "Sabado";
+// }
